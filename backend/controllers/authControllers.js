@@ -61,18 +61,18 @@ export const login = async (req, res)=>{
         const user = await User.findOne({userName});
         const isPasswordCorrect = await bcryptjs.compare(password, user?.password || "");
 
-        if(!user || isPasswordCorrect){
+        if(!user || !isPasswordCorrect){
             return res.status(400).json({error:"Invalid username or password"});
         }
 
-        generateTokenAndSetCookie(newUser._id, res);
-            await newUser.save();
+        generateTokenAndSetCookie(user._id, res);
+            await user.save();
 
             res.status(201).json({
-                _id: newUser._id,
-                fullName: newUser.fullName,
-                userName: newUser.userName,
-                profilePic: newUser.profilePic
+                _id: user._id,
+                fullName: user.fullName,
+                userName: user.userName,
+                profilePic: user.profilePic
         });
         
     } catch (error) {
