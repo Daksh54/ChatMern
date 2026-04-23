@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  nlp-service:
+    build:
+      context: .
+      dockerfile: services/nlp-service/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    depends_on:
+      - mongo
+      - redis
+      - nlp-service
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      CLIENT_URL: http://localhost:8080
+      MONGO_DB_URI: mongodb://mongo:27017/chatmern
+      JWT_SECRET: change-me
+      COOKIE_SAME_SITE: lax
+      REDIS_URL: redis://redis:6379
+      NLP_SERVICE_URL: http://nlp-service:8001
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  mongo-data:
