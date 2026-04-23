@@ -58,8 +58,12 @@ const Messages = () => {
 	};
 
 	return (
-		<div className='px-4 flex-1 overflow-auto' onScroll={handleScroll} ref={containerRef}>
-			{loadingMore ? <div className='py-2 text-center text-xs opacity-70'>Loading older messages...</div> : null}
+		<div className='chat-scroll flex-1 overflow-auto px-5 py-5' onScroll={handleScroll} ref={containerRef}>
+			{loadingMore ? (
+				<div className='mb-4 text-center text-xs uppercase tracking-[0.18em] text-slate-400'>
+					Loading messages...
+				</div>
+			) : null}
 			{!loading &&
 				messages.length > 0 &&
 				messages.map((message, index) => (
@@ -70,7 +74,12 @@ const Messages = () => {
 
 			{loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
 			{!loading && messages.length === 0 && (
-				<p className='text-center'>Send a message to start the conversation</p>
+				<div className='flex h-full min-h-[280px] items-center justify-center'>
+					<div className='text-center'>
+						<p className='display-font mb-2 text-2xl font-semibold text-slate-900'>No messages yet</p>
+						<p className='text-slate-500'>Send the first message to begin.</p>
+					</div>
+				</div>
 			)}
 		</div>
 	);

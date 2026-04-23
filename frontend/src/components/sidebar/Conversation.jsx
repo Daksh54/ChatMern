@@ -11,26 +11,28 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 	return (
 		<>
 			<div
-				className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer
-				${isSelected ? "bg-sky-500" : ""}
-			`}
+				className={`conversation-tile cursor-pointer ${isSelected ? "conversation-active" : ""}`}
 				onClick={() => setSelectedConversation(conversation)}
 			>
-				<div className={`avatar ${isOnline ? "online" : ""}`}>
-					<div className='w-12 rounded-full'>
+				<div className='relative shrink-0'>
+					<div className='w-14 overflow-hidden rounded-2xl border border-white/10'>
 						<img src={conversation.profilePic} alt='user avatar' />
 					</div>
+					<span
+						className={`absolute bottom-0 right-0 status-dot ${isOnline ? "status-online" : "status-offline"}`}
+					></span>
 				</div>
 
-				<div className='flex flex-col flex-1'>
-					<div className='flex gap-3 justify-between'>
-						<p className='font-bold text-gray-200'>{conversation.fullName}</p>
-						<span className='text-xl'>{emoji}</span>
+				<div className='min-w-0 flex-1'>
+					<div className='mb-1 flex items-center justify-between gap-3'>
+						<p className='truncate font-semibold text-slate-900'>{conversation.fullName}</p>
+						<span className='rounded-full bg-slate-100 px-2 py-1 text-sm'>{emoji}</span>
 					</div>
+					<p className='truncate text-sm text-slate-500'>{isOnline ? "Online" : "Offline"}</p>
 				</div>
 			</div>
 
-			{!lastIdx && <div className='divider my-0 py-0 h-1' />}
+			{!lastIdx && <div className='h-0.5'></div>}
 		</>
 	);
 };
